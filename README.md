@@ -1,5 +1,5 @@
 # NARL-Adjuster
-This is an official PyTorch implementation of Improve Noise Tolerance of Robust Loss via Noise-Awareness
+This is an official PyTorch implementation of Improve Noise Tolerance of Robust Loss via Noise-Awareness.
 ## Environment
 * python 3.7.10
 * torch 0.8.1
@@ -13,6 +13,9 @@ python main.py --dataset cifar10 --corruption_prob 0.4 --corruption_type flip_sm
 
 | Noise Type | Test Accuracy |
 | :----: | :----: |
-| Symmetric | 88.10 |
-| Asymmetric | 88.03 |
-| Instance | 87.33 |
+| Symmetric | 88.10% |
+| Asymmetric | 88.03% |
+| Instance | 87.33% |
+## Acknowledgments
+Thanks to the pytorch implementation of Meta-Weight-Net(https://github.com/xjtushujun/meta-weight-net).
+Contact: Ding Kehui(dkh19970303@163.com).
