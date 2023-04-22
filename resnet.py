@@ -318,11 +318,3 @@ class VNet(MetaModule):
         x = self.relu1(x)
         out = self.linear2(x)
         return self.coefficient * F.sigmoid(out)
-
-
-
-
-
-
-
-

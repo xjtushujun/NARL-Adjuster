@@ -28,16 +28,16 @@ from load_corrupted_data import CIFAR10, CIFAR100
 parser = argparse.ArgumentParser(description='PyTorch Training')
 parser.add_argument('--dataset', default='cifar10', type=str,
                     help='dataset (cifar10 [default] or cifar10)')
-parser.add_argument('--corruption_prob', type=float, default=0.4,
+parser.add_argument('--corruption_prob', '--cprob', type=float, default=0.4,
                     help='label noise')
-parser.add_argument('--corruption_type', '-ctype', type=str, default='unif',
+parser.add_argument('--corruption_type', '--ctype', type=str, default='unif',
                     help='Type of corruption ("unif" or "flip_smi" for cifar10 or "hierarchical" for cifar100).')
 parser.add_argument('--num_meta', type=int, default=1000)
 parser.add_argument('--epochs', default=120, type=int,
                     help='number of total epochs to run')
 parser.add_argument('--warmup_epochs', default=0, type=int,
                     help='number of epochs for warmup')
-parser.add_argument('--batch_size', '--batch-size', default=100, type=int,
+parser.add_argument('--batch_size', '--bs', default=100, type=int,
                     help='mini-batch size (default: 100)')
 parser.add_argument('--lr', '--learning-rate', default=1e-1, type=float,
                     help='initial learning rate')
@@ -130,7 +130,6 @@ def build_model():
 
     if torch.cuda.is_available():
         model.cuda()
-        torch.backends.cudnn.benchmark = False
 
     return model
 
@@ -212,7 +211,10 @@ def adjust_learning_rate(optimizer, epochs):
     if args.corruption_type == 'instance':
         lr = args.lr * ((0.1 ** int(epochs >= 40)) * (0.1 ** int(epochs >= 80)))
     else:
-        lr = args.lr * ((0.1 ** int(epochs >= 80)) * (0.1 ** int(epochs >= 100)))
+        if args.dataset == 'cifar10':
+            lr = args.lr * ((0.1 ** int(epochs >= 80)) * (0.1 ** int(epochs >= 100)))
+        else:
+            lr = args.lr * ((0.1 ** int(epochs >= 80)) * (0.1 ** int(epochs >= 120)))
     for param_group in optimizer.param_groups:
         param_group['lr'] = lr
 
@@ -268,7 +270,10 @@ def train(train_meta_loader, train_loader, model, vnet, optimizer_model, optimiz
             if args.corruption_type == 'instance':
                 meta_lr = args.lr * ((0.1 ** int(epoch >= 40)) * (0.1 ** int(epoch >= 80)))
             else:
-                meta_lr = args.lr * ((0.1 ** int(epoch >= 80)) * (0.1 ** int(epoch >= 100)))
+                if args.dataset == 'cifar10':
+                    meta_lr = args.lr * ((0.1 ** int(epoch >= 80)) * (0.1 ** int(epoch >= 100)))
+                else:
+                    meta_lr = args.lr * ((0.1 ** int(epoch >= 80)) * (0.1 ** int(epoch >= 120)))
             meta_model.update_params(lr_inner=meta_lr, source_params=grads)
             del grads
                 
@@ -306,6 +311,7 @@ def train(train_meta_loader, train_loader, model, vnet, optimizer_model, optimiz
         train_loss += loss.item()
 
         if (batch_idx + 1) % 50 == 0:
+            # print(q[0:1])
             print('Epoch: [%d/%d]\t'
                   'Iters: [%d/%d]\t'
                   'Loss: %.4f\t'
@@ -325,7 +331,7 @@ def warmup(train_loader, model, optimizer_model, epoch):
         inputs, targets = inputs.to(device), targets.to(device)
         outputs = model(inputs)
 
-        loss = F.cross_entropy(outputs, targets)
+        loss = F.cross_entropy(outputs, targets.long())
 
         optimizer_model.zero_grad()
         loss.backward()
