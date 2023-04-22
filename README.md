@@ -13,4 +13,6 @@ python main.py --dataset cifar10 --corruption_prob 0.4 --corruption_type flip_sm
 
 | Noise Type | Test Accuracy |
 | :----: | :----: |
-Unif | 88.10
+| Symmetric | 88.10 |
+| Asymmetric | 88.03 |
+| Instance | 87.33 |
