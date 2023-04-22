@@ -11,6 +11,6 @@ python main.py --dataset cifar10 --corruption_prob 0.4 --corruption_type flip_sm
 ```
 ## Result
 
-Noise Type | Test Accuracy
----- | ----
+| Noise Type | Test Accuracy |
+| :----: | :----: |
 Unif | 88.10
