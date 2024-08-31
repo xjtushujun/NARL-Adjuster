@@ -14,7 +14,7 @@ ResNet32 on CIFAR100 with 20% unif noise:
 ```
 python main.py --dataset cifar100 --corruption_prob 0.2 --corruption_type unif --epochs 150 --warmup_epochs 0 --batch_size 100 --lr 1e-1 --wd 5e-4 --mwd 1e-4
 ```
-## Results(CIFAR10)
+## Results under 40% Nosie (CIFAR10)
 
 | Noise Type | Test Accuracy |
 | :----: | :----: |
