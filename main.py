@@ -12,6 +12,7 @@ import matplotlib.pyplot as plt
 from load_corrupted_data import CIFAR10, CIFAR100
 from resnet import *
 from meta import *
+from utils import *
 from sklearn.cluster import KMeans
 
 
@@ -22,6 +23,7 @@ parser.add_argument('--corruption_prob', '--cprob', type=float, default=0.4,
                     help='label noise')
 parser.add_argument('--corruption_type', '--ctype', type=str, default='unif',
                     help='Type of corruption ("unif" or "flip_smi" for cifar10 or "hierarchical" for cifar100).')
+parser.add_argument('--loss_type', type=str, default='GCE')
 parser.add_argument('--num_meta', type=int, default=1000)
 parser.add_argument('--epochs', default=120, type=int,
                     help='number of total epochs to run')
@@ -124,20 +126,6 @@ def build_model():
         torch.backends.cudnn.benchmark = True
 
     return model
-
-
-def gce(outputs, target, q):
-    loss = 0
-    for i in range(outputs.size(0)):
-        x = outputs[i][target[i]]
-        if x < 0.003:
-            y = 12.9 * x
-        else:
-            y = x ** q[i]
-        loss += (1.0 - y) / q[i]
-
-    loss = loss / outputs.size(0)
-    return loss.to(device)
     
 
 def accuracy(output, target, topk=(1,)):
@@ -221,11 +209,7 @@ def train(train_meta_loader, train_loader, model, vnet, optimizer_model, optimiz
             outputs_meta = meta_model(inputs)
             vnet_meta_input = net_input(outputs_meta, targets)
 
-            outputs_meta = F.softmax(outputs_meta, dim=1)
-            q_meta = vnet(vnet_meta_input.data.view(-1,1), targets.data, c)
-            q_meta = torch.clamp(q_meta, 0.01, 1.)
-
-            l_f_meta = gce(outputs_meta, targets, q_meta)
+            l_f_meta = loss_forward(outputs_meta,targets,vnet_meta_input,vnet,c,loss_used=args.loss_type)
 
             meta_grads = torch.autograd.grad(l_f_meta, meta_model.parameters(), create_graph=True)
                 
@@ -254,12 +238,7 @@ def train(train_meta_loader, train_loader, model, vnet, optimizer_model, optimiz
         prec_train = accuracy(outputs.data, targets.data, topk=(1,))[0]
         vnet_input = net_input(outputs, targets)
 
-        outputs = F.softmax(outputs, dim=1)
-        with torch.no_grad():
-            q = vnet(vnet_input.view(-1,1), targets.data, c)
-        q = torch.clamp(q, 0.01, 1.)
-
-        loss = gce(outputs, targets, q)
+        loss = loss_forward(outputs,targets,vnet_input,vnet,c,loss_used=args.loss_type)
 
         optimizer_model.zero_grad()
         loss.backward()
@@ -307,7 +286,7 @@ def warmup(train_loader, model, optimizer_model, epoch):
 train_meta_loader, train_loader, test_loader = build_dataset()
 
 model = build_model()
-vnet = Adjuster(1, 100, 100, 1, 3).to(device)
+vnet = Adjuster(1, 100, 100, 1, 3, loss=args.loss_type).to(device)
 
 optimizer_model = torch.optim.SGD(model.parameters(), args.lr,
                                   momentum=args.momentum, weight_decay=args.weight_decay)

@@ -333,11 +333,16 @@ class task(nn.Module):
 
 
 class Adjuster(nn.Module):
-    def __init__(self, input, hidden1, hidden2, output, num_classes):
+    def __init__(self, input, hidden1, hidden2, output, num_classes, loss='GCE'):
         super(Adjuster, self).__init__()
         self.feature = share(input, hidden1, hidden2)
         self.classfier = task(hidden2, output, num_classes)
-        self.coefficient = torch.Tensor([1.5]).cuda()
+        if loss == 'GCE':
+            self.coefficient = torch.Tensor([1.5]).cuda()
+        elif loss == 'SL':
+            self.coefficient = torch.Tensor([1., 1.]).cuda()
+        elif loss == 'JS':
+            self.coefficient = torch.Tensor([1.4]).cuda()
 
     def forward(self, x, num, c):
         # num = torch.argmax(num, -1)
