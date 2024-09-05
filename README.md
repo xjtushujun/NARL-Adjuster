@@ -13,14 +13,14 @@ Robust loss minimization is an important strategy for handling robust learning i
 * sklearn
 
 ## Experiments
-We empirically validate that the proposed NARL-Adjuster algorithm can enhance the robustness of loss functions on four kinds of robust losses (GCE, SL, JS and PolySoft) and conduct experiments on benchmark datasets (CIFAR-10 and CIFAR-100) under different nosie structurs (uniform, class-dependent and instance-dependent). 
+We empirically validate that the proposed NARL-Adjuster algorithm can enhance the robustness of loss functions on four kinds of robust losses (GCE, SL, JS and PolySoft) and conduct experiments on benchmark datasets (CIFAR-10 and CIFAR-100) under different nosie structurs (uniform, class-dependent and instance-dependent). Here are examples for GCE:
 ResNet32 on CIFAR10 with 20% unif noise:
 ```
-python main.py --dataset cifar10 --corruption_prob 0.2 --corruption_type unif --epochs 120 --warmup_epochs 0 --batch_size 100 --lr 1e-1 --wd 5e-4 --mwd 1e-4
+python main.py --dataset cifar10 --corruption_prob 0.2 --corruption_type unif --loss_type GCE --epochs 120 --batch_size 100 --lr 1e-1 --wd 5e-4 --mwd 1e-4
 ```
 ResNet32 on CIFAR100 with 20% unif noise:
 ```
-python main.py --dataset cifar100 --corruption_prob 0.2 --corruption_type unif --epochs 150 --warmup_epochs 0 --batch_size 100 --lr 1e-1 --wd 5e-4 --mwd 1e-4
+python main.py --dataset cifar100 --corruption_prob 0.2 --corruption_type unif --loss_type GCE --epochs 150 --batch_size 100 --lr 1e-1 --wd 5e-4 --mwd 1e-4
 ```
 ## Acknowledgments
 Thanks to the pytorch implementation of Meta-Weight-Net(https://github.com/xjtushujun/meta-weight-net).
