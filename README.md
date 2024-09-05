@@ -1,5 +1,5 @@
 # NARL-Adjuster
-This is an official PyTorch implementation of Improve Noise Tolerance of Robust Loss via Noise-Awareness.[Arxiv Vervision](https://arxiv.org/pdf/2301.07306)
+This is an official PyTorch implementation for the paper: Improve Noise Tolerance of Robust Loss via Noise-Awareness. [Arxiv Vervision](https://arxiv.org/pdf/2301.07306)
 ## Environment
 * python 3.7.10
 * torch 0.8.1
