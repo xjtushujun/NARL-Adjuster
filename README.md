@@ -11,7 +11,7 @@ Robust loss minimization is an important strategy for handling robust learning i
 * torch 0.8.1
 * torchvision 0.9.1
 * sklearn
-* 
+
 ## Running NARL-Adjuster on benchmark datasets (CIFAR-10 and CIFAR-100).
 ResNet32 on CIFAR10 with 20% unif noise:
 ```
