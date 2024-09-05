@@ -17,11 +17,11 @@ We empirically validate that the proposed NARL-Adjuster algorithm can enhance th
 
 CIFAR10 with 40% class-dependent noise:
 ```
-python main.py --dataset cifar10 --corruption_prob 0.2 --corruption_type flip_smi --loss_type GCE --epochs 120 --batch_size 100 --lr 1e-1 --wd 5e-4 --mwd 1e-4
+python main.py --dataset cifar10 --corruption_prob 0.4 --corruption_type flip_smi --loss_type GCE --epochs 120 --batch_size 100 --lr 1e-1 --wd 5e-4 --mwd 1e-4
 ```
 CIFAR100 with 40% class-dependent noise:
 ```
-python main.py --dataset cifar100 --corruption_prob 0.2 --corruption_type hierarchical --loss_type GCE --epochs 150 --batch_size 100 --lr 1e-1 --wd 5e-4 --mwd 1e-4
+python main.py --dataset cifar100 --corruption_prob 0.4 --corruption_type hierarchical --loss_type GCE --epochs 150 --batch_size 100 --lr 1e-1 --wd 5e-4 --mwd 1e-4
 ```
 ## Acknowledgments
 Thanks to the pytorch implementation of Meta-Weight-Net(https://github.com/xjtushujun/meta-weight-net).
