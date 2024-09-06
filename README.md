@@ -4,7 +4,7 @@ This is an official PyTorch implementation for the paper: Improve Noise Toleranc
 ## Overview
 Robust loss minimization is an important strategy for handling robust learning issue on noisy labels. Current approaches for designing robust losses involve the introduction of noise-robust factors, i.e., hyperparameters, to control the trade-off between noise robustness and learnability. However, finding suitable hyperparameters for different datasets with noisy labels is a challenging and time-consuming task. Moreover, existing robust loss methods usually assume that all training samples share common hyperparameters, which are independent of instances. This limits the ability of these methods to distinguish the individual noise properties of different samples and overlooks the varying contributions of diverse training samples in helping models understand underlying patterns. To address above issues, we propose to assemble robust loss with instance-dependent hyperparameters to improve their noise tolerance with theoretical guarantee. To achieve setting such instance-dependent hyperparameters for robust loss, we propose a meta-learning method which is capable of adaptively learning a hyperparameter prediction function, called Noise-Aware-Robust-Loss-Adjuster (NARL-Adjuster for brevity). The structure of NARL-Adjuster is shown below:
 
-![image](Architecture.pdf)
+![image](structure.pdf)
 
 ## Environment
 * python 3.7.10
